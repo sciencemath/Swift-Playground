@@ -61,6 +61,10 @@ struct ContentView: View {
     @State private var score = 0
     @State private var isShowingFinalScore = false
     
+    @State private var animationAmount = 0.0
+    @State private var selectedNum = 0
+    @State private var opacity = 1.0
+    
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
     @State private var correctAnswer = Int.random(in: 0...2)
     
@@ -83,13 +87,17 @@ struct ContentView: View {
                         Text(countries[correctAnswer]).font(.largeTitle.weight(.semibold))
                     }.foregroundColor(.primary)
                     
-                    ForEach(0..<3) { number in
+                    ForEach(0..<3, id: \.self) { number in
                         Button {
+                            selectedNum = number
                             flagTapped(number)
                         } label: {
                             FlagImage(image: countries[number])
-                        }
+                        }.rotation3DEffect(.degrees(selectedNum == number  ? animationAmount : 0), axis: (x: 0, y: 1, z: 0))
+                            .opacity(selectedNum != number ? opacity : 1.0)
+                            .scaleEffect(selectedNum != number ? opacity : 1) // re-used opacity state for the scale
                     }
+                    
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 20)
@@ -119,6 +127,11 @@ struct ContentView: View {
     }
     
     func flagTapped(_ number: Int) {
+        withAnimation {
+            animationAmount += 360
+            opacity = 0.25
+        }
+        
         if number == correctAnswer {
             scoreTitle = "Correct"
             score += 1
@@ -136,6 +149,7 @@ struct ContentView: View {
     }
     
     func askQuestion() {
+        opacity = 1
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
     }
