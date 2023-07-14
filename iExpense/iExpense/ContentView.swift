@@ -121,23 +121,35 @@ struct ContentView6: View {
         }
     }
 }
-
+/**
+ @TODO For a bigger challenge, try splitting the expenses list into two sections: one for personal expenses, and one for business expenses. This is tricky for a few reasons, not least because it means being careful about how items are deleted!
+ */
 struct ContentView: View {
     @StateObject var expenses = Expenses()
     @State private var showingAddExpense = false
+    let userCurrency = Locale.current.currency?.identifier ?? "USD"
     
     var body: some View {
         NavigationView {
             List {
                 ForEach(expenses.items) { item in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(item.name).font(.headline)
-                            Text(item.type)
+                    if (item.type == "Personal") {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(item.name).font(.headline)
+                                Text(item.type)
+                            }
+                            Spacer()
+                            
+                            Text(item.amount, format: .currency(code: userCurrency))
+                            if item.amount < 10.0 {
+                                Text("💵")
+                            } else if item.amount < 100.0 {
+                                Text("💸")
+                            } else {
+                                Text("💰")
+                            }
                         }
-                        Spacer()
-                        
-                        Text(item.amount, format: .currency(code: "USD"))
                     }
 //                    Text(item.name)
                 }
