@@ -1,19 +1,17 @@
 //
-//  DrawingApp.swift
-//  Drawing
+//  HabitTrackingApp.swift
+//  HabitTracking
 //
-//  Created by Mathias on 7/14/23.
+//  Created by Mathias on 7/15/23.
 //
 
 import SwiftUI
 
 @main
-struct DrawingApp: App {
+struct HabitTrackingApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
     }
 }
-
-
