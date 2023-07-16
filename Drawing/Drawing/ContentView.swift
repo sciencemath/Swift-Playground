@@ -5,7 +5,7 @@
 //  Created by Mathias on 7/14/23.
 //
 
-// @TODO finish day 46.
+// @TODO finish day 46. https://www.hackingwithswift.com/books/ios-swiftui/drawing-wrap-up
 
 import SwiftUI
 
@@ -365,6 +365,7 @@ struct ContentView: View {
     @State private var hue = 0.6
     
     var body: some View {
+        NavigationVie
         VStack(spacing: 0) {
             Spacer()
             

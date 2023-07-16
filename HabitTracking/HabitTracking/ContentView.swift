@@ -8,7 +8,7 @@
 import SwiftUI
 
 // @TODO separate the below out into there respective files, and finish the rest of challenge
-// wasn't clear on what should happen so we'll have to improvise. Day 47
+// wasn't clear on what should happen so we'll have to improvise. Day 47 https://www.hackingwithswift.com/guide/ios-swiftui/4/3/challenge
 
 class Activities: ObservableObject {
     @Published var activities = [Activity]() {
