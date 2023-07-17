@@ -16,6 +16,7 @@
 		C754ADAB2A64D31D00E1E9DC /* AddBookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C754ADAA2A64D31D00E1E9DC /* AddBookView.swift */; };
 		C754ADAD2A64E3C700E1E9DC /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C754ADAC2A64E3C700E1E9DC /* RatingView.swift */; };
 		C754ADAF2A64EB9A00E1E9DC /* EmojiRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C754ADAE2A64EB9A00E1E9DC /* EmojiRatingView.swift */; };
+		C7D77FFC2A65696000AF20F6 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D77FFB2A65696000AF20F6 /* DetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		C754ADAA2A64D31D00E1E9DC /* AddBookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBookView.swift; sourceTree = "<group>"; };
 		C754ADAC2A64E3C700E1E9DC /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		C754ADAE2A64EB9A00E1E9DC /* EmojiRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiRatingView.swift; sourceTree = "<group>"; };
+		C7D77FFB2A65696000AF20F6 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 				C754ADAC2A64E3C700E1E9DC /* RatingView.swift */,
 				C754ADAE2A64EB9A00E1E9DC /* EmojiRatingView.swift */,
 				C754AD992A64816400E1E9DC /* ContentView.swift */,
+				C7D77FFB2A65696000AF20F6 /* DetailView.swift */,
 				C754ADA82A6498D500E1E9DC /* DataController.swift */,
 				C754ADA52A64987800E1E9DC /* Bookworm.xcdatamodeld */,
 				C754ADAA2A64D31D00E1E9DC /* AddBookView.swift */,
@@ -153,6 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C754AD9A2A64816400E1E9DC /* ContentView.swift in Sources */,
+				C7D77FFC2A65696000AF20F6 /* DetailView.swift in Sources */,
 				C754ADA92A6498D500E1E9DC /* DataController.swift in Sources */,
 				C754ADAF2A64EB9A00E1E9DC /* EmojiRatingView.swift in Sources */,
 				C754ADA72A64987800E1E9DC /* Bookworm.xcdatamodeld in Sources */,
