@@ -25,22 +25,39 @@ struct User: Codable {
         var name: String
     }
 }
-
-
         
 struct ContentView: View {
     @State private var users = [User]()
     
     var body: some View {
-        List(users, id: \.id) { user in
-            VStack(alignment: .leading) {
-                Text(user.name)
-                Text(user.company)
+        NavigationStack {
+            List {
+                ForEach(users, id: \.id) { user in
+                    NavigationLink {
+                        UserDetail(user: user)
+                    } label: {
+                        HStack {
+                            Color(user.isActive ? .green : .red)
+                                .frame(width: 10, height: 10)
+                                .clipShape(Circle())
+                                .padding()
+                            VStack(alignment: .leading) {
+                                Text(user.name)
+                                Text(user.company)
+                            }
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Users")
+            .task {
+                if (!users.isEmpty) {
+                    return
+                }
+                await loadData()
             }
         }
-        .task {
-            await loadData()
-        }
+        
     }
     
     func loadData() async {
@@ -55,7 +72,6 @@ struct ContentView: View {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
             users = try decoder.decode([User].self, from: data)
-            print(users)
         } catch {
             print("Decode error", error)
             return
