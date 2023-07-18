@@ -74,12 +74,95 @@ import SwiftUI
 //    }
 //}
 
+// Using custom filter using the singer data
+//struct ContentView: View {
+//    @Environment(\.managedObjectContext) var moc
+//    @State private var lastNameFilter = "A"
+//
+//    var body: some View {
+//        VStack {
+//            FilteredList(filterKey: "lastName", filterValue: lastNameFilter) { (singer: Singer) in
+//                Text("\(singer.wrappedFirstName) \(singer.wrappedLastName)")
+//            }
+//
+//            Button("Add Examples") {
+//                let taylor = Singer(context: moc)
+//                taylor.firstName = "Taylor"
+//                taylor.lastName = "Swift"
+//
+//                let ed = Singer(context: moc)
+//                ed.firstName = "Ed"
+//                ed.lastName = "Sheeran"
+//
+//                let adele = Singer(context: moc)
+//                adele.firstName = "Adele"
+//                adele.lastName = "Adkins"
+//
+//                try? moc.save()
+//            }
+//
+//            Button("Show A") {
+//                lastNameFilter = "A"
+//            }
+//
+//            Button("Show S") {
+//                lastNameFilter = "S"
+//            }
+//        }
+//    }
+//}
+
+// using country -> candy relationship (many to one) from core data
 struct ContentView: View {
     @Environment(\.managedObjectContext) var moc
-    @State private var lastNameFilter = "A"
+    @FetchRequest(sortDescriptors: []) var countries: FetchedResults<Country>
     
     var body: some View {
-        Text("Placeholder")
+        VStack {
+            List {
+                ForEach(countries, id: \.self) { country in
+                    Section(country.wrappedFullName) {
+                        ForEach(country.candyArray, id: \.self) { candy in
+                            Text(candy.wrappedName)
+                        }
+                    }
+                }
+            }
+            
+            Button("Add Examples") {
+                let candy1 = Candy(context: moc)
+                candy1.name = "PayDay"
+                candy1.origin = Country(context: moc)
+                candy1.origin?.shortName = "US"
+                candy1.origin?.fullName = "United States"
+                
+                let candy2 = Candy(context: moc)
+                candy2.name = "KitKat"
+                candy2.origin = Country(context: moc)
+                candy2.origin?.shortName = "UK"
+                candy2.origin?.fullName = "United Kingdom"
+                
+                let candy3 = Candy(context: moc)
+                candy3.name = "Toblerone"
+                candy3.origin = Country(context: moc)
+                candy3.origin?.shortName = "CH"
+                candy3.origin?.fullName = "Switzerland"
+                
+                let candy4 = Candy(context: moc)
+                candy4.name = "Cuberdon"
+                candy4.origin = Country(context: moc)
+                candy4.origin?.shortName = "BE"
+                candy4.origin?.fullName = "Belgium"
+                
+                let candy5 = Candy(context: moc)
+                candy5.name = "Baby Ruth"
+                candy5.origin = Country(context: moc)
+                candy5.origin?.shortName = "US"
+                candy5.origin?.fullName = "United States"
+                
+                try? moc.save()
+            }
+        }
     }
 }
 
