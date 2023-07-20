@@ -11,6 +11,9 @@
 		C7D780842A68D64300AF20F6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D780832A68D64300AF20F6 /* ContentView.swift */; };
 		C7D780862A68D64500AF20F6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C7D780852A68D64500AF20F6 /* Assets.xcassets */; };
 		C7D780892A68D64500AF20F6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C7D780882A68D64500AF20F6 /* Preview Assets.xcassets */; };
+		C7D780902A697EF500AF20F6 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D7808F2A697EF500AF20F6 /* Location.swift */; };
+		C7D780922A698CE500AF20F6 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D780912A698CE500AF20F6 /* EditView.swift */; };
+		C7D780942A699AB800AF20F6 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D780932A699AB800AF20F6 /* Result.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +22,9 @@
 		C7D780832A68D64300AF20F6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C7D780852A68D64500AF20F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C7D780882A68D64500AF20F6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C7D7808F2A697EF500AF20F6 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		C7D780912A698CE500AF20F6 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
+		C7D780932A699AB800AF20F6 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +41,8 @@
 		C7D780752A68D64300AF20F6 = {
 			isa = PBXGroup;
 			children = (
+				C7D780932A699AB800AF20F6 /* Result.swift */,
+				C7D780912A698CE500AF20F6 /* EditView.swift */,
 				C7D780802A68D64300AF20F6 /* BucketList */,
 				C7D7807F2A68D64300AF20F6 /* Products */,
 			);
@@ -53,6 +61,7 @@
 			children = (
 				C7D780812A68D64300AF20F6 /* BucketListApp.swift */,
 				C7D780832A68D64300AF20F6 /* ContentView.swift */,
+				C7D7808F2A697EF500AF20F6 /* Location.swift */,
 				C7D780852A68D64500AF20F6 /* Assets.xcassets */,
 				C7D780872A68D64500AF20F6 /* Preview Content */,
 			);
@@ -138,6 +147,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C7D780842A68D64300AF20F6 /* ContentView.swift in Sources */,
+				C7D780942A699AB800AF20F6 /* Result.swift in Sources */,
+				C7D780902A697EF500AF20F6 /* Location.swift in Sources */,
+				C7D780922A698CE500AF20F6 /* EditView.swift in Sources */,
 				C7D780822A68D64300AF20F6 /* BucketListApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -269,6 +281,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"BucketList/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "We need to unlock your data.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -297,6 +310,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"BucketList/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "We need to unlock your data.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

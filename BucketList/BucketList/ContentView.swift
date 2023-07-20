@@ -5,14 +5,15 @@
 //  Created by Mathias on 7/19/23.
 //
 
+import LocalAuthentication
 import MapKit
 import SwiftUI
 
-struct Location: Identifiable {
-    let id = UUID()
-    let name: String
-    let coordinate: CLLocationCoordinate2D
-}
+//struct Location: Identifiable {
+//    let id = UUID()
+//    let name: String
+//    let coordinate: CLLocationCoordinate2D
+//}
 
 enum LoadingState {
     case loading, success, failed
@@ -96,34 +97,135 @@ struct ContentView3: View {
     }
 }
 
-struct ContentView: View {
-    @State private var mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 51.5, longitude: -0.12), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
-    
-    let locations = [
-        Location(name: "Buckingham Palace", coordinate: CLLocationCoordinate2D(latitude: 51.501, longitude: -0.141)),
-        Location(name: "Tower of London", coordinate: CLLocationCoordinate2D(latitude: 51.508, longitude: -0.076))
-    ]
+// using the old Location struct above
+//struct ContentView4: View {
+//    @State private var mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 51.5, longitude: -0.12), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
+//
+//    let locations = [
+//        Location(name: "Buckingham Palace", coordinate: CLLocationCoordinate2D(latitude: 51.501, longitude: -0.141)),
+//        Location(name: "Tower of London", coordinate: CLLocationCoordinate2D(latitude: 51.508, longitude: -0.076))
+//    ]
+//
+//    var body: some View {
+//        NavigationStack {
+//            Map(coordinateRegion: $mapRegion, annotationItems: locations) { location in
+//                //            MapMarker(coordinate: location.coordinate)
+//                // You can pass any view for custom markers
+//                MapAnnotation(coordinate: location.coordinate) {
+//                    NavigationLink {
+//                        Text(location.name)
+//                    } label: {
+//                        Circle()
+//                            .stroke(.red, lineWidth: 2)
+//                            .frame(width: 44, height: 44)
+//                            .onTapGesture {
+//                                print("location name \(location.name)")
+//                            }
+//                    }
+//                }
+//            }
+//        }
+//        .navigationTitle("London Explorer")
+//    }
+//}
+
+struct ContentView5: View {
+    @State private var isUnlocked = false
     
     var body: some View {
-        NavigationStack {
+        VStack {
+            if isUnlocked {
+                Text("Unlocked")
+            } else {
+                Text("Locked")
+            }
+        }
+        .onAppear(perform: authenticate)
+    }
+    
+    func authenticate() {
+        let context = LAContext()
+        var error: NSError?
+        
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            // the below message is used for touchID,
+            // the message in `privacy faceID` in target info is used for faceID
+            let reason = "We need to unlock your data"
+            
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
+                if success {
+                    isUnlocked = true
+                } else {
+                    // there was a problem
+                }
+            }
+        } else {
+            // no biometrics
+        }
+    }
+}
+
+struct ContentView: View {
+    @State private var mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 50, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 25, longitudeDelta: 25))
+    @State private var locations = [Location]()
+    
+    @State private var selectedPlace: Location?
+    
+    var body: some View {
+        ZStack {
             Map(coordinateRegion: $mapRegion, annotationItems: locations) { location in
-                //            MapMarker(coordinate: location.coordinate)
-                // You can pass any view for custom markers
-                MapAnnotation(coordinate: location.coordinate) {
-                    NavigationLink {
+                MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)) {
+                    VStack {
+                        Image(systemName: "star.circle")
+                            .resizable()
+                            .foregroundColor(.red)
+                            .frame(width: 44, height: 44) // *NOTE*: Apple's minimum width and height for anything interactive!
+                            .background(.white)
+                            .clipShape(Circle())
+                        
                         Text(location.name)
-                    } label: {
-                        Circle()
-                            .stroke(.red, lineWidth: 2)
-                            .frame(width: 44, height: 44)
-                            .onTapGesture {
-                                print("location name \(location.name)")
-                            }
+                            .fixedSize()
+                    }
+                    .onTapGesture {
+                        selectedPlace = location
                     }
                 }
             }
+            .ignoresSafeArea()
+            
+            Circle()
+                .fill(.blue)
+                .opacity(0.3)
+                .frame(width: 32, height: 32)
+            
+            VStack {
+                Spacer()
+                
+                HStack {
+                    Spacer()
+                    
+                    Button {
+                        let newLocation = Location(id: UUID(), name: "New location", description: "", latitude: mapRegion.center.latitude, longitude: mapRegion.center.longitude)
+                        locations.append(newLocation)
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                    .padding()
+                    .background(.black.opacity(0.75))
+                    .foregroundColor(.white)
+                    .font(.title)
+                    .clipShape(Circle())
+                    .padding(.trailing)
+                }
+            }
         }
-        .navigationTitle("London Explorer")
+        .sheet(item: $selectedPlace) { place in
+            EditView(location: place) { newLocation in
+                if let index = locations.firstIndex(of: place) {
+                    locations[index] = newLocation
+                }
+            }
+        }
     }
 }
 
