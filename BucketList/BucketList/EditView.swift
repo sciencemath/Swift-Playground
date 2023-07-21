@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct EditView: View {
+    @StateObject private var viewModel = EditViewModel()
+    
     enum LoadingState {
         case loading, loaded, failed
     }
@@ -15,8 +17,8 @@ struct EditView: View {
     var location: Location
     var onSave: (Location) -> Void
     
-    @State private var name: String
-    @State private var description: String
+//    @State private var name: String
+//    @State private var description: String
     
     @State private var loadingState = LoadingState.loading
     @State private var pages = [Page]()
@@ -25,8 +27,8 @@ struct EditView: View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("Place name", text: $name)
-                    TextField("Description", text: $description)
+                    TextField("Place name", text: $viewModel.name)
+                    TextField("Description", text: $viewModel.description)
                 }
                 
                 Section("Nearby...") {
@@ -49,11 +51,7 @@ struct EditView: View {
             .navigationTitle("Place details")
             .toolbar {
                 Button("Save") {
-                    var newLocation = location
-                    newLocation.id = UUID()
-                    newLocation.name = name
-                    newLocation.description = description
-                    
+                    var newLocation = viewModel.createLocation(location)
                     onSave(newLocation)
                     dismiss()
                 }
@@ -68,8 +66,8 @@ struct EditView: View {
         self.location = location
         self.onSave = onSave
         
-        _name = State(initialValue: location.name)
-        _description = State(initialValue: location.description)
+//        _name = State(initialValue: location.name)
+//        _description = State(initialValue: location.description)
     }
     
     func fetchNearbyPlaces() async {
