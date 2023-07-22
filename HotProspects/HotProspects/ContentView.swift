@@ -4,8 +4,9 @@
 //
 //  Created by Mathias on 7/21/23.
 //
-
+import SamplePackage
 import SwiftUI
+import UserNotifications
 
 @MainActor class DelayedUpdater: ObservableObject {
     var value = 0 {
@@ -120,7 +121,7 @@ struct ContentView4: View {
     }
 }
 
-struct ContentView: View {
+struct ContentView5: View {
     var body: some View {
         Image("example")
             .interpolation(.none) // keeping the pixels in place (i.e. not bluring them when sizing up image)
@@ -129,6 +130,96 @@ struct ContentView: View {
             .frame(maxHeight: .infinity)
             .background(.black)
             .ignoresSafeArea()
+    }
+}
+
+struct ContentView6: View {
+    @State private var backgroundColor = Color.red
+    
+    var body: some View {
+        Text("Hello, world!")
+            .padding()
+            .background(backgroundColor)
+        
+        Text("Change Color")
+            .padding()
+            .contextMenu {
+                Button(role: .destructive) {
+                    backgroundColor = .red
+                } label: {
+                    Label("Red", systemImage: "checkmark.circle.fill")
+                        .foregroundColor(.red)
+                }
+                Button("Green") { backgroundColor = .green }
+                Button("Blue") { backgroundColor = .blue }
+            }
+    }
+}
+
+struct ContentView7: View {
+    var body: some View {
+        List {
+            Text("Taylor Swift")
+                .swipeActions {
+                    Button(role: .destructive) {
+                        print("Deleting")
+                    } label: {
+                        Label("Send message", systemImage: "minus.circle")
+                    }
+                }
+                .swipeActions(edge: .leading) {
+                    Button {
+                        print("Pinning")
+                    } label: {
+                        Label("Pin", systemImage: "pin")
+                    }
+                    .tint(.orange)
+                }
+        }
+    }
+}
+
+struct ContentView8: View {
+    var body: some View {
+        VStack {
+            Button("Request Permission") {
+                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                    if success {
+                        print("All set!")
+                    } else if let error = error {
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+            
+            Button("Schedule Notification") {
+                let content = UNMutableNotificationContent()
+                content.title = "Go to the gym"
+                content.subtitle = "You must go to the gym everyday"
+                content.sound = UNNotificationSound.default
+                
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+                
+                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                
+                UNUserNotificationCenter.current().add(request)
+            }
+        }
+    }
+}
+
+struct ContentView: View {
+    let possibleNumbers = Array(1...60)
+    
+    var body: some View {
+        Text(results)
+    }
+    
+    var results: String {
+        let selected = possibleNumbers.random(7).sorted()
+        let strings = selected.map(String.init)
+        
+        return strings.joined(separator: ", ")
     }
 }
 
