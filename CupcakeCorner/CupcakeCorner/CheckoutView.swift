@@ -26,6 +26,7 @@ struct CheckoutView: View {
                     ProgressView()
                 }
                 .frame(height: 233) // here so when the image is finally loaded it won't jump around
+                .accessibilityElement()
                 
                 Text("Your total is \(order.cost, format: .currency(code: "USD"))")
                     .font(.title)

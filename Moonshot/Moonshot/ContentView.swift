@@ -3,7 +3,7 @@
 //  Moonshot
 //
 //  Created by Mathias on 7/13/23.
-//
+// @TODO add more accessibilty (hard to test since simulator doesn't support voice over <- might need some research)
 
 import SwiftUI
 

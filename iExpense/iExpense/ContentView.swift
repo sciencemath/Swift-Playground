@@ -150,6 +150,8 @@ struct ContentView: View {
                                 Text("💰")
                             }
                         }
+                        .accessibilityLabel(item.name)
+                        .accessibilityHint("\(item.amount) spent")
                     }
 //                    Text(item.name)
                 }
