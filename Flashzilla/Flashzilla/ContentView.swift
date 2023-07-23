@@ -8,6 +8,15 @@
 import CoreHaptics
 import SwiftUI
 
+// creating a wrapper for animation so we don't have conditionals everywhere see below
+func withOptionalAnimation<Result>(_ animation: Animation? = .default, _ body: () throws -> Result) rethrows -> Result {
+    if UIAccessibility.isReduceMotionEnabled {
+        return try body()
+    } else {
+        return try withAnimation(animation, body)
+    }
+}
+
 struct ContentView1: View {
     var body: some View {
         VStack {
@@ -178,17 +187,98 @@ struct ContentView5: View {
     }
 }
 
-struct ContentView: View {
+struct ContentView6: View {
     var body: some View {
         VStack {
             Text("Hello")
             Spacer().frame(height: 100)
             Text("World")
         }
-        .contentShape(Rectangle())
+        .contentShape(Rectangle()) // needed to register click in all space of VStack
         .onTapGesture {
             print("V")
         }
+    }
+}
+
+struct ContentView7: View {
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var counter = 0
+    
+    var body: some View {
+        Text("Hello")
+            .onReceive(timer) { time in
+                if counter == 5 {
+                    timer.upstream.connect().cancel()
+                } else {
+                    print("The time is now \(time)")
+                }
+                counter += 1
+            }
+    }
+}
+
+struct ContentView8: View {
+    @Environment(\.scenePhase) var scenePhase
+    
+    var body: some View {
+        Text("Scene")
+            .onChange(of: scenePhase) { newPhase in
+                if newPhase == .active {
+                    print("Active")
+                } else if newPhase == .inactive {
+                    print("Inactive")
+                } else if newPhase == .background {
+                    print("Background")
+                }
+            }
+    }
+}
+
+struct ContentView9: View {
+    //    @Environment(\.accessibilityDifferentiateWithoutColor) var differentiateWithoutColor
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
+    @State private var scale = 1.0
+    
+    var body: some View {
+        Text("Hello")
+            .scaleEffect(scale)
+            .onTapGesture {
+                // see above why we can comment out the conditional below (withOptionalAnimation)
+                withOptionalAnimation {
+                    scale *= 1.5
+                }
+                //                if reduceMotion {
+                //                    scale *= 1.5
+                //                } else {
+                //                    withAnimation {
+                //                        scale *= 1.5
+                //                    }
+                //                }
+                //            }
+                //        HStack {
+                //            if differentiateWithoutColor {
+                //                Image(systemName: "checkmark.circle")
+                //            }
+                //
+                //            Text("Success")
+                //        }
+                //        .padding()
+                //        .background(differentiateWithoutColor ? .black : .green)
+                //        .foregroundColor(.white)
+                //        .clipShape(Capsule())
+            }
+    }
+    
+struct ContentView: View {
+    @Environment(\.accessibilityReduceTransparency) var reduceTransparency
+    
+    var body: some View {
+        Text("Reduced Transparency")
+            .padding()
+            .background(reduceTransparency ? .black : .black.opacity(0.5))
+            .foregroundColor(.white)
+            .clipShape(Capsule())
     }
 }
 
