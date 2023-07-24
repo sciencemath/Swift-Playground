@@ -3,7 +3,8 @@
 //  Flashzilla
 //
 //  Created by Mathias on 7/22/23.
-//
+// @TODO https://www.hackingwithswift.com/books/ios-swiftui/flashzilla-wrap-up
+// NOTE: Could not reproduce #2, should test more? Start at 3 and the still thirsty... (will come back)
 
 import CoreHaptics
 import SwiftUI
