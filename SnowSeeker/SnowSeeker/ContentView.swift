@@ -7,6 +7,22 @@
 
 import SwiftUI
 
+
+/**
+ * usage on a view for a viewModifier:
+ * .phoneOnlyNavigationView()
+ * Force non-adaptive layout which is not needed because of the comment below.
+ */
+extension View {
+    @ViewBuilder func phoneOnlyNavigationView() -> some View {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            self.navigationViewStyle(.stack)
+        } else {
+            self
+        }
+    }
+}
+
 struct User: Identifiable {
     var id = "Taylor Swift"
 }
@@ -48,7 +64,7 @@ struct ContentView2: View {
     }
 }
 
-struct ContentView: View {
+struct ContentView3: View {
     @State private var searchText = ""
     let allNames = ["Mathias", "Hope", "Nate", "Amy"]
     
@@ -67,6 +83,54 @@ struct ContentView: View {
             return allNames
         } else {
             return allNames.filter { $0.localizedCaseInsensitiveContains(searchText) }
+        }
+    }
+}
+
+/**
+ * NavigationView is depracated no longer does it adapt by default (which is a good thing in my opinion)
+ * using NavigationStack and if necessary could use NavigationSplitView where it mimiced the old behavior
+ * but for our purposes and for future it makes sense to just stick with NavigationStack.
+ */
+struct ContentView: View {
+    let resorts: [Resort] = Bundle.main.decode("resorts.json")
+    
+    @State private var searchText = ""
+    
+    var body: some View {
+        NavigationStack {
+            List(filteredResorts) { resort in
+                NavigationLink {
+                    ResortView(resort: resort)
+                } label: {
+                    Image(resort.country)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 40, height: 25)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 5)
+                                .stroke(.black, lineWidth: 1)
+                        )
+                    
+                    VStack(alignment: .leading) {
+                        Text(resort.name)
+                            .font(.headline)
+                        Text("\(resort.runs) runs")
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+            .navigationTitle("Resorts")
+            .searchable(text: $searchText, prompt: "Search for a resort")
+        }
+    }
+    
+    var filteredResorts: [Resort] {
+        if searchText.isEmpty {
+            return resorts
+        } else {
+            return resorts.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         }
     }
 }
