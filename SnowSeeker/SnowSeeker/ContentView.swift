@@ -87,50 +87,105 @@ struct ContentView3: View {
     }
 }
 
+enum SortDirection {
+    case defaultOrder
+    case alphabeticalOrder
+    case countryOrder
+}
+
 /**
  * NavigationView is depracated no longer does it adapt by default (which is a good thing in my opinion)
  * using NavigationStack and if necessary could use NavigationSplitView where it mimiced the old behavior
  * but for our purposes and for future it makes sense to just stick with NavigationStack.
  */
 struct ContentView: View {
-    let resorts: [Resort] = Bundle.main.decode("resorts.json")
+    var resorts: [Resort] = Bundle.main.decode("resorts.json")
     
+    @State private var sortDirection: SortDirection = .defaultOrder
+    
+    @StateObject var favorites = Favorites()
     @State private var searchText = ""
+    @State private var clicks = 0
     
-    var body: some View {
-        NavigationStack {
-            List(filteredResorts) { resort in
-                NavigationLink {
-                    ResortView(resort: resort)
-                } label: {
-                    Image(resort.country)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 40, height: 25)
-                        .clipShape(RoundedRectangle(cornerRadius: 5))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 5)
-                                .stroke(.black, lineWidth: 1)
-                        )
-                    
-                    VStack(alignment: .leading) {
-                        Text(resort.name)
-                            .font(.headline)
-                        Text("\(resort.runs) runs")
-                            .foregroundColor(.secondary)
-                    }
-                }
-            }
-            .navigationTitle("Resorts")
-            .searchable(text: $searchText, prompt: "Search for a resort")
+    var sortDirectionText: String {
+        switch sortDirection {
+        case .defaultOrder:
+            return "Default"
+        case .countryOrder:
+            return "Country"
+        case .alphabeticalOrder:
+            return "Alphabetical"
         }
     }
     
-    var filteredResorts: [Resort] {
-        if searchText.isEmpty {
-            return resorts
-        } else {
-            return resorts.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+    var body: some View {
+        NavigationStack {
+            VStack {
+                Button("Current: \(sortDirectionText) sort") {
+                    clicks += 1
+                    if clicks == 1 {
+                        sortDirection = .countryOrder
+                    } else if clicks == 2 {
+                        sortDirection = .alphabeticalOrder
+                    } else {
+                        clicks = 0
+                        sortDirection = .defaultOrder
+                    }
+                }
+                List(filteredResorts) { resort in
+                    NavigationLink {
+                        ResortView(resort: resort)
+                    } label: {
+                        HStack {
+                            Image(resort.country)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 40, height: 25)
+                                .clipShape(RoundedRectangle(cornerRadius: 5))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(.black, lineWidth: 1)
+                                )
+                            
+                            VStack(alignment: .leading) {
+                                Text(resort.name)
+                                    .font(.headline)
+                                Text("\(resort.runs) runs")
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            if favorites.contains(resort) {
+                                Spacer()
+                                Image(systemName: "heart.fill")
+                                    .accessibilityLabel("This is a favorite")
+                                    .foregroundColor(.red)
+                            }
+                        }
+                    }
+                }
+                .navigationTitle("Resorts")
+                .searchable(text: $searchText, prompt: "Search for a resort")
+            }
+            .environmentObject(favorites)
+        }
+        
+        var filteredResorts: [Resort] {
+            var sortedResorts = resorts
+            
+            switch sortDirection {
+            case .defaultOrder:
+                break
+            case .countryOrder:
+                sortedResorts.sort { $0.country < $1.country }
+            case .alphabeticalOrder:
+                sortedResorts.sort { $0.name < $1.name }
+            }
+            
+            if (!searchText.isEmpty) {
+                return sortedResorts.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+            } else {
+                return sortedResorts
+            }
         }
     }
 }
