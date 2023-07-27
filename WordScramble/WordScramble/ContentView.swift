@@ -71,7 +71,7 @@ struct ContentView: View {
     @State private var playerScore = 0
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 Section {
                     TextField("Enter your word", text: $newWord)

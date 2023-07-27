@@ -94,7 +94,7 @@ struct ContentView: View {
     var body: some
     View {
         VStack {
-            NavigationView {
+            NavigationStack {
                 Form {
                     Section {
                         TextField("Amount", value: $checkAmount, format:
@@ -125,7 +125,6 @@ struct ContentView: View {
                     } header: {
                         Text("Amount per person")
                             .lineLimit(1)
-                        
                     }
                     
                     Section {

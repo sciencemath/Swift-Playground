@@ -59,7 +59,7 @@ struct ContentView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 VStack(alignment: .leading, spacing: 0) {
                     Text("When do you want to wake up?").font(.headline)
