@@ -122,14 +122,13 @@ struct ContentView5: View {
 struct ContentView: View {
     @State private var isShowingListView = false
     let missions: [Mission] = Bundle.main.decode("missions.json")
-    let columns = [
-        GridItem(.adaptive(minimum: 150))
-    ]
+    let columnGrid = [GridItem(.adaptive(minimum: 150))]
+    let columnList = [GridItem(.adaptive(minimum: .infinity))]
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
-                LazyVGrid(columns: columns) {
+                LazyVGrid(columns: !isShowingListView ? columnGrid : columnList) {
                     ForEach(missions) { mission in
                         NavigationLink {
                             MissionView(mission: mission)
@@ -167,10 +166,6 @@ struct ContentView: View {
                 Button {
                     isShowingListView.toggle()
                 } label: {
-                    /**
-                     @TODO make this functional, there has to be a better way than using a conditional to load a GridView vs a ListView
-                     after separating the above out into its own views. Everything should be the same except the top level view it returns.
-                     */
                     Text(isShowingListView ? "Grid View" : "List View")
                 }
             }
