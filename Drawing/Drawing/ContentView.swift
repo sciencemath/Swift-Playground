@@ -116,6 +116,44 @@ struct Trapezoid: Shape {
     }
 }
 
+struct ContentView: View {
+    @State private var topX: Double = 0.0
+    @State private var topY: Double = 0.0
+    @State private var bottomX: Double = 0.0
+    @State private var bottomY: Double = 0.0
+    
+    var body: some View {
+        ZStack {
+            ForEach(0..<100) { value in
+                Rectangle()
+                    .inset(by: Double(value))
+                    .strokeBorder(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color(hue: 0.8, saturation: 1, brightness: 0.5),
+                                Color(hue: 0.5, saturation: 1, brightness: 0.5)
+                            ]), startPoint: UnitPoint(x: topX, y: topY), endPoint: UnitPoint(x: bottomX, y: bottomY)
+                        ),
+                        lineWidth: 2
+                    )
+            }
+        }
+        .drawingGroup()
+        
+        Slider(value: $topX, in: 0.0...1.0)
+            .padding([.horizontal, .bottom])
+        
+        Slider(value: $bottomX, in: 0.0...1.0)
+            .padding([.horizontal, .bottom])
+        
+        Slider(value: $topY, in: 0.0...1.0)
+            .padding([.horizontal, .bottom])
+        
+        Slider(value: $bottomY, in: 0.0...1.0)
+            .padding([.horizontal, .bottom])
+    }
+}
+
 struct ColorCyclingCircle: View {
     var amount = 0.0
     var steps = 100
@@ -180,6 +218,7 @@ struct Triangle: Shape {
         path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
         path.addLine(to: CGPoint(x: rect.midX, y: rect.minY))
         
+    
         return path
     }
 }
@@ -259,8 +298,6 @@ struct ContentView3: View {
 
 struct ContentView4: View {
     var body: some View {
-//        Text("Hello, Universe!")
-//            .frame(width: 300, height: 300)
         Capsule()
             .strokeBorder(ImagePaint(image: Image("appleoffice"), sourceRect: CGRect(x: 0, y: 0.35, width: 1, height: 0.2), scale: 0.3), lineWidth: 20)
             .frame(width: 300, height: 500)
@@ -357,7 +394,31 @@ struct ContentView8: View {
     }
 }
 
-struct ContentView: View {
+struct ContentView10: View {
+    @State private var lineWidth: CGFloat = 1.0
+    
+    var body: some View {
+        Group {
+            Triangle()
+                .stroke(.red, lineWidth: lineWidth)
+                .frame(width: 100, height: 100)
+                .padding(0)
+                
+                
+            Rectangle()
+                .offset(x: 0, y: -10)
+                .frame(width: 50, height: 400)
+                .padding(0)
+        }.onTapGesture {
+            withAnimation(.linear(duration: 1)) {
+                lineWidth = CGFloat.random(in: 1...100)
+            }
+        }
+    }
+
+}
+
+struct ContentView9: View {
     @State private var innerRadius = 125.0
     @State private var outerRadius = 75.0
     @State private var distance = 25.0
@@ -365,36 +426,37 @@ struct ContentView: View {
     @State private var hue = 0.6
     
     var body: some View {
-        NavigationVie
-        VStack(spacing: 0) {
-            Spacer()
-            
-            Spirograph(innerRadius: Int(innerRadius), outerRadius: Int(outerRadius), distance: Int(distance), amount: amount)
-                .stroke(Color(hue: hue, saturation: 1, brightness: 1), lineWidth: 1)
-                .frame(width: 300, height: 300)
-            
-            Spacer()
-            
-            Group {
-                Text("Inner radius: \(Int(innerRadius))")
-                Slider(value: $innerRadius, in: 10...150, step: 1)
-                    .padding([.horizontal, .bottom])
+        NavigationStack {
+            VStack(spacing: 0) {
+                Spacer()
                 
-                Text("Outer radius: \(Int(outerRadius))")
-                Slider(value: $outerRadius, in: 10...150, step: 1)
-                    .padding([.horizontal, .bottom])
+                Spirograph(innerRadius: Int(innerRadius), outerRadius: Int(outerRadius), distance: Int(distance), amount: amount)
+                    .stroke(Color(hue: hue, saturation: 1, brightness: 1), lineWidth: 1)
+                    .frame(width: 300, height: 300)
                 
-                Text("Distance: \(Int(distance))")
-                Slider(value: $distance, in: 1...150, step: 1)
-                    .padding([.horizontal, .bottom])
+                Spacer()
                 
-                Text("Amount: \(amount, format: .number.precision(.fractionLength(2)))")
-                Slider(value: $amount)
-                    .padding([.horizontal, .bottom])
-                
-                Text("Color")
-                Slider(value: $hue)
-                    .padding(.horizontal)
+                Group {
+                    Text("Inner radius: \(Int(innerRadius))")
+                    Slider(value: $innerRadius, in: 10...150, step: 1)
+                        .padding([.horizontal, .bottom])
+                    
+                    Text("Outer radius: \(Int(outerRadius))")
+                    Slider(value: $outerRadius, in: 10...150, step: 1)
+                        .padding([.horizontal, .bottom])
+                    
+                    Text("Distance: \(Int(distance))")
+                    Slider(value: $distance, in: 1...150, step: 1)
+                        .padding([.horizontal, .bottom])
+                    
+                    Text("Amount: \(amount, format: .number.precision(.fractionLength(2)))")
+                    Slider(value: $amount)
+                        .padding([.horizontal, .bottom])
+                    
+                    Text("Color")
+                    Slider(value: $hue)
+                        .padding(.horizontal)
+                }
             }
         }
     }
