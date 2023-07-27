@@ -121,62 +121,79 @@ struct ContentView6: View {
         }
     }
 }
-/**
- @TODO For a bigger challenge, try splitting the expenses list into two sections: one for personal expenses, and one for business expenses. This is tricky for a few reasons, not least because it means being careful about how items are deleted!
- */
-struct ContentView: View {
-    @StateObject var expenses = Expenses()
-    @State private var showingAddExpense = false
+
+struct ExpenseItems: View {
     let userCurrency = Locale.current.currency?.identifier ?? "USD"
+    var item: ExpenseItem
     
     var body: some View {
-        NavigationView {
+        HStack {
+            VStack(alignment: .leading) {
+                Text(item.name).font(.headline)
+                Text(item.type)
+            }
+            Spacer()
+            
+            Text(item.amount, format: .currency(code: userCurrency))
+            if item.amount < 10.0 {
+                Text("💵")
+            } else if item.amount < 100.0 {
+                Text("💸")
+            } else {
+                Text("💰")
+            }
+        }
+        .accessibilityLabel(item.name)
+        .accessibilityHint("\(item.amount) spent")
+    }
+}
+
+// Business expenses and personal expenses are now separated in two lists!
+struct ContentView: View {
+    @StateObject var expenses = Expenses()
+    @ObservedObject var typer = ExpenseType()
+    
+    @State private var showingAddExpense = false
+    @State private var sheetAction = false
+    
+    var body: some View {
+        NavigationStack {
             List {
-                ForEach(expenses.items) { item in
-                    if (item.type == "Personal") {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text(item.name).font(.headline)
-                                Text(item.type)
-                            }
-                            Spacer()
-                            
-                            Text(item.amount, format: .currency(code: userCurrency))
-                            if item.amount < 10.0 {
-                                Text("💵")
-                            } else if item.amount < 100.0 {
-                                Text("💸")
-                            } else {
-                                Text("💰")
-                            }
-                        }
-                        .accessibilityLabel(item.name)
-                        .accessibilityHint("\(item.amount) spent")
-                    }
-//                    Text(item.name)
+                ForEach(typer.personal) { item in
+                    ExpenseItems(item: item)
                 }
-                .onDelete(perform: removeItems)
+                .onDelete(perform: removePersonalItems)
+            }
+            
+            List {
+                ForEach(typer.business) { item in
+                    ExpenseItems(item: item)
+                }
+                .onDelete(perform: removeBusinessItems)
             }
             .navigationTitle("iExpense")
             .toolbar {
                 Button {
                     showingAddExpense = true
-//                    let expense = ExpenseItem(name: "Test", type: "Personal", amount: 5)
-//                    expenses.items.append(expense)
                 } label: {
                     Image(systemName: "plus")
                 }
             }
             .sheet(isPresented: $showingAddExpense) {
-                AddView(expenses: expenses)
+                AddView(expenses: expenses, typer: typer)
             }
         }
     }
     
-    func removeItems(at offsets: IndexSet) {
-        expenses.items.remove(atOffsets: offsets)
+    func removePersonalItems(at offsets: IndexSet) {
+        typer.personal.remove(atOffsets: offsets)
+    }
+    
+    func removeBusinessItems(at offsets: IndexSet) {
+        typer.business.remove(atOffsets: offsets)
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
